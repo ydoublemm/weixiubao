@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="per.ymm.weixiubao.dao.OrdersMapper" >
+  <resultMap id="BaseResultMap" type="per.ymm.weixiubao.pojo.Orders" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="text_info" property="textInfo" jdbcType="VARCHAR" />
+    <result column="pic_info" property="picInfo" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="mode" property="mode" jdbcType="INTEGER" />
+    <result column="back_person" property="backPerson" jdbcType="VARCHAR" />
+    <result column="reason" property="reason" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="pay_mode" property="payMode" jdbcType="INTEGER" />
+    <result column="evaluate" property="evaluate" jdbcType="VARCHAR" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="receive_time" property="receiveTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="engineer_id" property="engineerId" jdbcType="INTEGER" />
+    <result column="user_openid" property="userOpenid" jdbcType="VARCHAR" />
+    <result column="current_order" property="currentOrder" jdbcType="INTEGER" />
+    <result column="order_address" property="orderAddress" jdbcType="VARCHAR" />
+    <result column="x_location" property="xLocation" jdbcType="DOUBLE" />
+    <result column="y_location" property="yLocation" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, text_info, pic_info, user_name, user_phone, status, mode, back_person, reason, 
+    price, pay_mode, evaluate, start_time, receive_time, end_time, engineer_id, user_openid, 
+    current_order, order_address, x_location, y_location
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="per.ymm.weixiubao.pojo.OrdersExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from orders
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from orders
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="per.ymm.weixiubao.pojo.OrdersExample" >
+    delete from orders
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="per.ymm.weixiubao.pojo.Orders" >
+    insert into orders (id, text_info, pic_info, 
+      user_name, user_phone, status, 
+      mode, back_person, reason, 
+      price, pay_mode, evaluate, 
+      start_time, receive_time, end_time, 
+      engineer_id, user_openid, current_order, 
+      order_address, x_location, y_location
+      )
+    values (#{id,jdbcType=VARCHAR}, #{textInfo,jdbcType=VARCHAR}, #{picInfo,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{userPhone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{mode,jdbcType=INTEGER}, #{backPerson,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}, 
+      #{price,jdbcType=DOUBLE}, #{payMode,jdbcType=INTEGER}, #{evaluate,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{receiveTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{engineerId,jdbcType=INTEGER}, #{userOpenid,jdbcType=VARCHAR}, #{currentOrder,jdbcType=INTEGER}, 
+      #{orderAddress,jdbcType=VARCHAR}, #{xLocation,jdbcType=DOUBLE}, #{yLocation,jdbcType=DOUBLE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="per.ymm.weixiubao.pojo.Orders" >
+    <selectKey keyProperty="id" order="BEFORE" resultType="String">
+      select replace(uuid(),'-','') from dual;
+    </selectKey>
+
+    insert into orders
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="textInfo != null" >
+        text_info,
+      </if>
+      <if test="picInfo != null" >
+        pic_info,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="userPhone != null" >
+        user_phone,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="mode != null" >
+        mode,
+      </if>
+      <if test="backPerson != null" >
+        back_person,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="payMode != null" >
+        pay_mode,
+      </if>
+      <if test="evaluate != null" >
+        evaluate,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="receiveTime != null" >
+        receive_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="engineerId != null" >
+        engineer_id,
+      </if>
+      <if test="userOpenid != null" >
+        user_openid,
+      </if>
+      <if test="currentOrder != null" >
+        current_order,
+      </if>
+      <if test="orderAddress != null" >
+        order_address,
+      </if>
+      <if test="xLocation != null" >
+        x_location,
+      </if>
+      <if test="yLocation != null" >
+        y_location,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="textInfo != null" >
+        #{textInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="picInfo != null" >
+        #{picInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null" >
+        #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="mode != null" >
+        #{mode,jdbcType=INTEGER},
+      </if>
+      <if test="backPerson != null" >
+        #{backPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="payMode != null" >
+        #{payMode,jdbcType=INTEGER},
+      </if>
+      <if test="evaluate != null" >
+        #{evaluate,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="receiveTime != null" >
+        #{receiveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="engineerId != null" >
+        #{engineerId,jdbcType=INTEGER},
+      </if>
+      <if test="userOpenid != null" >
+        #{userOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="currentOrder != null" >
+        #{currentOrder,jdbcType=INTEGER},
+      </if>
+      <if test="orderAddress != null" >
+        #{orderAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="xLocation != null" >
+        #{xLocation,jdbcType=DOUBLE},
+      </if>
+      <if test="yLocation != null" >
+        #{yLocation,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="per.ymm.weixiubao.pojo.OrdersExample" resultType="java.lang.Integer" >
+    select count(*) from orders
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update orders
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.textInfo != null" >
+        text_info = #{record.textInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.picInfo != null" >
+        pic_info = #{record.picInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userName != null" >
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userPhone != null" >
+        user_phone = #{record.userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.mode != null" >
+        mode = #{record.mode,jdbcType=INTEGER},
+      </if>
+      <if test="record.backPerson != null" >
+        back_person = #{record.backPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="record.reason != null" >
+        reason = #{record.reason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.price != null" >
+        price = #{record.price,jdbcType=DOUBLE},
+      </if>
+      <if test="record.payMode != null" >
+        pay_mode = #{record.payMode,jdbcType=INTEGER},
+      </if>
+      <if test="record.evaluate != null" >
+        evaluate = #{record.evaluate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.startTime != null" >
+        start_time = #{record.startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.receiveTime != null" >
+        receive_time = #{record.receiveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endTime != null" >
+        end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.engineerId != null" >
+        engineer_id = #{record.engineerId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userOpenid != null" >
+        user_openid = #{record.userOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.currentOrder != null" >
+        current_order = #{record.currentOrder,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderAddress != null" >
+        order_address = #{record.orderAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.xLocation != null" >
+        x_location = #{record.xLocation,jdbcType=DOUBLE},
+      </if>
+      <if test="record.yLocation != null" >
+        y_location = #{record.yLocation,jdbcType=DOUBLE},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update orders
+    set id = #{record.id,jdbcType=VARCHAR},
+      text_info = #{record.textInfo,jdbcType=VARCHAR},
+      pic_info = #{record.picInfo,jdbcType=VARCHAR},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      user_phone = #{record.userPhone,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      mode = #{record.mode,jdbcType=INTEGER},
+      back_person = #{record.backPerson,jdbcType=VARCHAR},
+      reason = #{record.reason,jdbcType=VARCHAR},
+      price = #{record.price,jdbcType=DOUBLE},
+      pay_mode = #{record.payMode,jdbcType=INTEGER},
+      evaluate = #{record.evaluate,jdbcType=VARCHAR},
+      start_time = #{record.startTime,jdbcType=TIMESTAMP},
+      receive_time = #{record.receiveTime,jdbcType=TIMESTAMP},
+      end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      engineer_id = #{record.engineerId,jdbcType=INTEGER},
+      user_openid = #{record.userOpenid,jdbcType=VARCHAR},
+      current_order = #{record.currentOrder,jdbcType=INTEGER},
+      order_address = #{record.orderAddress,jdbcType=VARCHAR},
+      x_location = #{record.xLocation,jdbcType=DOUBLE},
+      y_location = #{record.yLocation,jdbcType=DOUBLE}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="per.ymm.weixiubao.pojo.Orders" >
+    update orders
+    <set >
+      <if test="textInfo != null" >
+        text_info = #{textInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="picInfo != null" >
+        pic_info = #{picInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null" >
+        user_phone = #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="mode != null" >
+        mode = #{mode,jdbcType=INTEGER},
+      </if>
+      <if test="backPerson != null" >
+        back_person = #{backPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="payMode != null" >
+        pay_mode = #{payMode,jdbcType=INTEGER},
+      </if>
+      <if test="evaluate != null" >
+        evaluate = #{evaluate,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="receiveTime != null" >
+        receive_time = #{receiveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="engineerId != null" >
+        engineer_id = #{engineerId,jdbcType=INTEGER},
+      </if>
+      <if test="userOpenid != null" >
+        user_openid = #{userOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="currentOrder != null" >
+        current_order = #{currentOrder,jdbcType=INTEGER},
+      </if>
+      <if test="orderAddress != null" >
+        order_address = #{orderAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="xLocation != null" >
+        x_location = #{xLocation,jdbcType=DOUBLE},
+      </if>
+      <if test="yLocation != null" >
+        y_location = #{yLocation,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="per.ymm.weixiubao.pojo.Orders" >
+    update orders
+    set text_info = #{textInfo,jdbcType=VARCHAR},
+      pic_info = #{picInfo,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      user_phone = #{userPhone,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      mode = #{mode,jdbcType=INTEGER},
+      back_person = #{backPerson,jdbcType=VARCHAR},
+      reason = #{reason,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      pay_mode = #{payMode,jdbcType=INTEGER},
+      evaluate = #{evaluate,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      receive_time = #{receiveTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      engineer_id = #{engineerId,jdbcType=INTEGER},
+      user_openid = #{userOpenid,jdbcType=VARCHAR},
+      current_order = #{currentOrder,jdbcType=INTEGER},
+      order_address = #{orderAddress,jdbcType=VARCHAR},
+      x_location = #{xLocation,jdbcType=DOUBLE},
+      y_location = #{yLocation,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

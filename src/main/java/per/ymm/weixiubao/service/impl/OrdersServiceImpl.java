@@ -20,7 +20,7 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public String save(final Orders orders) {
         //设置初始化信息
-        orders.setStatus(1);//订单状态 需要前端确认
+        orders.setStatus(0);//订单状态 需要前端确认
         orders.setMode(1);//是否要服务：1是，2退单
         orders.setCurrentOrder(1);//是否是当前订单 1是，2不是
 

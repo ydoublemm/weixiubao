@@ -41,4 +41,15 @@ public class EngineerController {
         return meg;
     }
 
+/*
+    //异常测试
+    @RequestMapping(value = "/test")
+    public  ReturnMessage test() throws MessageException {
+       if(null==null){
+           throw new MessageException("信息不能为空");
+       }
+        return ReturnMessage.Ok();
+    }
+*/
+
 }

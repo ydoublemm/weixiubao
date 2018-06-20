@@ -55,4 +55,7 @@ public class ReturnMessage<T> {
         this.message = message;
         this.data = data;
     }
+
+    public ReturnMessage() {
+    }
 }

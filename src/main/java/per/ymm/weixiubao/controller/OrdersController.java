@@ -1,7 +1,9 @@
 package per.ymm.weixiubao.controller;
 
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -30,17 +32,17 @@ public class OrdersController {
     //生成一个订单
     @RequestMapping(value = "/save.action")
     @ResponseBody
-    public ReturnMessage createOrders(Orders orders, @RequestParam(value = "file", required = false) MultipartFile[] mf) throws IOException {
+    public ReturnMessage createOrders(
+           Orders orders, @RequestParam(value = "file", required = false) MultipartFile[] mf) throws IOException {
 
-
-        System.out.println(orders.getStartTime());
-        orders.setId(UUID.randomUUID().toString());
+        //orders.setId(UUID.randomUUID().toString());
         //图片名字
         if(mf.length!=0) {
             String fileName = SaveFile.save(mf);
             orders.setPicInfo(fileName);
         }
-            ordersService.save(orders);
+        System.out.println(orders);
+        ordersService.save(orders);
 
         return ReturnMessage.Ok();
     }

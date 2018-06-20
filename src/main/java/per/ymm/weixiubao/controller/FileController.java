@@ -14,13 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-/**
- * @Author: ymm
- * @Date: 2018/5/7 19:03
- * @Description:
- */
-/*
-@Controller
+
+/*@Controller
 @RequestMapping(value = "/file")
 public class FileController {
     //本地磁盘路径
@@ -33,7 +28,6 @@ public class FileController {
     @RequestMapping("upload")
     public String upload(HttpServletRequest request, @RequestParam(value = "file", required = false) MultipartFile[] mf) throws IOException {
     }
-}
-*/
+}*/
 
 

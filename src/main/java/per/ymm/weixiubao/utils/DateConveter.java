@@ -17,7 +17,7 @@ public class DateConveter implements Converter<String,Date> {
     public Date convert(final String s) {
         try {
             if(s!=null){
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:MM");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 return sdf.parse(s);
                 /*return new Timestamp(sdf.parse(s).getTime());*/
             }

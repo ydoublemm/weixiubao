@@ -10,6 +10,9 @@ import per.ymm.weixiubao.exception.MessageException;
 import per.ymm.weixiubao.pojo.Engineer;
 import per.ymm.weixiubao.service.EngineerService;
 import per.ymm.weixiubao.utils.ReturnMessage;
+import per.ymm.weixiubao.vo.PageVo;
+
+import java.util.Map;
 
 /**
  * @Author: ymm
@@ -34,11 +37,42 @@ public class EngineerController {
     //根据电话查询工程师的信息
     @RequestMapping(value = "/findInfoByPhoneNumber.action", method = RequestMethod.POST)
     @ResponseBody
-    public ReturnMessage findInfo(@RequestBody Engineer engineer) throws MessageException {
+    public ReturnMessage getInfoByPhone(@RequestBody Engineer engineer) throws MessageException {
         Engineer currEngineer = engineerService.findInfoByPhoneNumber(engineer.getPhoneNumber());
         ReturnMessage<Engineer> meg = new ReturnMessage(true);
         meg.setData(currEngineer);
         return meg;
+    }
+
+    //分页查询工程师信息
+    @RequestMapping(value = "/getInfo.action")
+    @ResponseBody
+    public ReturnMessage getInfo(PageVo page){
+        Map info = engineerService.getInfoByPage(page);
+        ReturnMessage ok = ReturnMessage.Ok();
+        ok.setData(info);
+
+        return ok ;
+    }
+
+    //修改工程师信息
+    @RequestMapping(value = "/updateInfo.action")
+    @ResponseBody
+    public ReturnMessage updateInfo(Engineer engineer) throws MessageException {
+        boolean b = engineerService.updateInfoById(engineer);
+        return ReturnMessage.isOk(b);
+    }
+
+    //
+    @RequestMapping(value = "/deleteEngineer.action")
+    @ResponseBody
+    public ReturnMessage updateInfo(Integer id) throws MessageException {
+        boolean b = engineerService.deleteEngineerByid(id);
+        ReturnMessage message = ReturnMessage.isOk(b);
+        if(b==false){
+            message.setMessage("删除失败");
+        }
+        return message;
     }
 
 /*

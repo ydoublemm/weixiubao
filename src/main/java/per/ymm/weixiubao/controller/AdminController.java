@@ -48,7 +48,6 @@ public class AdminController {
         admin.setPassword("");
         ReturnMessage rm = new ReturnMessage(true,null,admin);
 
-
         return rm;
     }
 }

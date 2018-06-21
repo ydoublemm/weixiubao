@@ -46,8 +46,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Admin getgetAdminInfoByUser(final String adminName) throws Exception {
-        if(adminName==null){
-            throw new Exception("请先登录！！");
+        if(adminName==null ){
+            throw new MessageException("请先登录！！");
         }
         AdminExample ae = new AdminExample();
         ae.createCriteria().andUserEqualTo(adminName);

@@ -2,8 +2,10 @@ package per.ymm.weixiubao.service;
 
 import per.ymm.weixiubao.exception.MessageException;
 import per.ymm.weixiubao.pojo.Engineer;
+import per.ymm.weixiubao.vo.PageVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: ymm
@@ -11,9 +13,21 @@ import java.util.List;
  * @Description:
  */
 public interface EngineerService {
-    public List<Engineer> findAll();
+    //查询所有工程师信息
+    List<Engineer> findAll();
+
     //保存一个工程师的信息
-    public void save(Engineer engineer) throws MessageException;
+    void save(Engineer engineer) throws MessageException;
+
     //根据电话查询工程师的信息
     Engineer findInfoByPhoneNumber(String phoneNumber) throws MessageException;
+
+    //分页查询工程师信息
+    Map getInfoByPage(PageVo page);
+
+    //通过id修改工程师信息
+    boolean updateInfoById(Engineer engineer) throws MessageException;
+    //通过id删除工程师信息
+    boolean deleteEngineerByid(Integer id);
+
 }

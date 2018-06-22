@@ -10,7 +10,7 @@ public class ReturnMessage<T> {
     String message;
     T data;
 
-    public static ReturnMessage Ok(){
+    public static ReturnMessage ok(){
         return new ReturnMessage(true,null,null);
     }
 
@@ -21,6 +21,7 @@ public class ReturnMessage<T> {
     public static ReturnMessage isOk(boolean isOk,String message){
         return new ReturnMessage(isOk,message,null);
     }
+
 
     public ReturnMessage(final boolean success) {
         this.success = success;

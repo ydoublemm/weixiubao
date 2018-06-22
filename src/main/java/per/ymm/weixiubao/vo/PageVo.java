@@ -16,7 +16,7 @@ public class PageVo {
     }
 
     public void setCurrentPage(final Integer currentPage) {
-        this.currentPage = currentPage;
+            this.currentPage = currentPage;
     }
 
     public Integer getPageSize() {
@@ -24,7 +24,11 @@ public class PageVo {
     }
 
     public void setPageSize(final Integer pageSize) {
-        this.pageSize = pageSize;
+        if (pageSize == null || pageSize <= 0) {
+            this.pageSize = 7;
+        } else {
+            this.pageSize = pageSize;
+        }
     }
 
     public Integer getTotalCount() {
@@ -41,5 +45,15 @@ public class PageVo {
 
     public void setTotalPage(final Integer totalPage) {
         this.totalPage = totalPage;
+    }
+
+    public PageVo(final Integer currentPage, final Integer pageSize) {
+
+        this.currentPage = currentPage;
+
+        this.pageSize = pageSize;
+    }
+
+    public PageVo() {
     }
 }

@@ -10,6 +10,7 @@ import per.ymm.weixiubao.pojo.Engineer;
 import per.ymm.weixiubao.pojo.EngineerExample;
 import per.ymm.weixiubao.service.EngineerService;
 import per.ymm.weixiubao.utils.EngineerUtils;
+import per.ymm.weixiubao.utils.PageVoUtils;
 import per.ymm.weixiubao.vo.PageVo;
 
 import javax.xml.stream.events.EndDocument;
@@ -83,11 +84,9 @@ public class EngineerServiceImpl implements EngineerService {
 
     @Override
     public Map<String, Object> getInfoByPage(PageVo page) {
-        System.out.println(page.getPageSize());
-        if (page.getPageSize() == null || page.getPageSize() <= 0) {
-            page.setPageSize(7);
-        }
-        //这里page不用判断，pagehelper会帮忙判断
+        //健壮性检查
+        PageVoUtils.check(page);
+        //pagehelper分页
         Page<Object> newPage = PageHelper.startPage(page.getCurrentPage(), page.getPageSize());
         List<Engineer> engineers = engineerMapper.selectByExample(null);
 
@@ -127,6 +126,7 @@ public class EngineerServiceImpl implements EngineerService {
         int i = engineerMapper.deleteByPrimaryKey(id);
         return i>0?true:false;
     }
+
 
 
 }

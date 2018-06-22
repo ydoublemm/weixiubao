@@ -23,7 +23,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean submitUserInfo(final User user) throws MessageException {
-        if(user.getOpenid()==null){
+        System.out.println(user.getOpenid());
+        if (user.getOpenid() == null || user.getOpenid()=="") {
             throw new MessageException("openid不存在！！");
         }
         //查询是否已经存在
@@ -31,9 +32,10 @@ public class UserServiceImpl implements UserService {
         ue.createCriteria().andOpenidEqualTo(user.getOpenid());
         List<User> users = userMapper.selectByExample(ue);
 
+
         //没查到
-        if(users.size()==0 || users ==null){
-            userMapper.insertSelective(user);
+        if (users.size() == 0 || users == null) {
+        userMapper.insertSelective(user);
             return true;
         }
 

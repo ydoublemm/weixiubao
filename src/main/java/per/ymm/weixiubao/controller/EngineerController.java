@@ -49,9 +49,8 @@ public class EngineerController {
     @ResponseBody
     public ReturnMessage getInfo(PageVo page){
         Map info = engineerService.getInfoByPage(page);
-        ReturnMessage ok = ReturnMessage.Ok();
+        ReturnMessage ok = ReturnMessage.ok();
         ok.setData(info);
-
         return ok ;
     }
 
@@ -63,7 +62,7 @@ public class EngineerController {
         return ReturnMessage.isOk(b);
     }
 
-    //
+    //删除一个工程师
     @RequestMapping(value = "/deleteEngineer.action")
     @ResponseBody
     public ReturnMessage updateInfo(Integer id) throws MessageException {
@@ -82,7 +81,7 @@ public class EngineerController {
        if(null==null){
            throw new MessageException("信息不能为空");
        }
-        return ReturnMessage.Ok();
+        return ReturnMessage.ok();
     }
 */
 

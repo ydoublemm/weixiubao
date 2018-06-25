@@ -2,10 +2,7 @@ package per.ymm.weixiubao.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import per.ymm.weixiubao.exception.MessageException;
 import per.ymm.weixiubao.pojo.Admin;
 import per.ymm.weixiubao.service.AdminService;
@@ -18,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Date: 2018/6/20 13:48
  * @Description:
  */
+
 @Controller
 @RequestMapping(value = "/admin")
 public class AdminController {

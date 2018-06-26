@@ -26,7 +26,7 @@ import java.util.Map;
 @RequestMapping(value = "/wx")
 public class WxController {
     @ResponseBody
-    @RequestMapping("/getOpenId")//此处填自己要用到的项目名。
+    @RequestMapping("/getOpenId.action")//此处填自己要用到的项目名。
     public ReturnMessage getOpenid(@RequestParam(value="code",required=false)String wxCode) {//接收用户传过来的code，required=false表明如果这个参数没有传过来也可以。
          String code=wxCode;
         //接收从客户端获取的code

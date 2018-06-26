@@ -9,8 +9,6 @@ import java.io.IOException;
 /**
  * CorsFileter 功能描述：CORS过滤器
  *
- * @author RickyLee【l**@*.com.cn】
- * @date 2017/2/9 11:24
  */
 @Component
 public class CorsFilter implements Filter {

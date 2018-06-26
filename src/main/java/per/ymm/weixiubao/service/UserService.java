@@ -9,6 +9,6 @@ import per.ymm.weixiubao.pojo.User;
  * @Description:
  */
 public interface UserService {
-    ////上传用户信息保存到服务器
+    //上传用户信息保存到服务器
     boolean submitUserInfo(User user) throws MessageException;
 }

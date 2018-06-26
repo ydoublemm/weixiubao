@@ -11,6 +11,7 @@ import per.ymm.weixiubao.pojo.Orders;
 import per.ymm.weixiubao.pojo.OrdersExample;
 import per.ymm.weixiubao.service.OrdersService;
 import per.ymm.weixiubao.utils.PageVoUtils;
+import per.ymm.weixiubao.vo.OrdersVo;
 import per.ymm.weixiubao.vo.PageVo;
 
 import java.util.Date;
@@ -70,10 +71,56 @@ public class OrdersServiceImpl implements OrdersService {
     public boolean confirmOrder(final String orderId) {
         Orders o = new Orders();
         o.setId(orderId);
-        o.setStatus(1);
+        o.setStatus(1);//等待工程师受理
         int i = ordersMapper.updateByPrimaryKeySelective(o);
-        System.out.println(i);
         return i >= 1 ? true : false;
+    }
+
+    @Override
+    public boolean ordersTaking(OrdersVo ordersVo) {
+        Orders o = new Orders();
+        o.setId(ordersVo.getOrderId());
+        o.setEngineerId(ordersVo.getEngineerId());
+        o.setStatus(2);//工程师已受理
+        int i = ordersMapper.updateByPrimaryKeySelective(o);
+
+        return i >= 1 ? true : false;
+    }
+
+    @Override
+    public List<Orders> getOrdersForEngineer() {
+        OrdersExample oe= new OrdersExample();
+        oe.createCriteria().andStatusEqualTo(1);
+        List<Orders> orders = ordersMapper.selectByExample(oe);
+        return orders;
+    }
+
+    @Override
+    public List<Orders> getOrdersByStatusForEngineer(OrdersVo ordersVo) throws MessageException {
+        //判断查询的信息是否合法
+        if(ordersVo.getStatus()>3||ordersVo.getStatus()<2){
+            throw new MessageException("无法查询该状态的订单！！");
+        }
+        OrdersExample oe= new OrdersExample();
+        //查询工程师自己的 已受理订单 和已结束订单
+        oe.createCriteria().andStatusEqualTo(ordersVo.getStatus())
+                           .andEngineerIdEqualTo(ordersVo.getEngineerId());
+        List<Orders> orders = ordersMapper.selectByExample(oe);
+        return orders;
+    }
+
+    @Override
+    public List<Orders> getOrdersByStatusForUser(final OrdersVo ordersVo) throws MessageException {
+        //判断查询的信息是否合法
+        if(ordersVo.getStatus()>3||ordersVo.getStatus()<0){
+            throw new MessageException("无法查询该状态的订单！！");
+        }
+        OrdersExample oe= new OrdersExample();
+        //查询工程师自己的 已受理订单 和已结束订单
+        oe.createCriteria().andStatusEqualTo(ordersVo.getStatus())
+                .andUserOpenidEqualTo(ordersVo.getOpenId());
+        List<Orders> orders = ordersMapper.selectByExample(oe);
+        return orders;
     }
 
 

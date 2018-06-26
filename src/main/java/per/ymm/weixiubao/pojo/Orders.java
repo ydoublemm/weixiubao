@@ -1,5 +1,7 @@
 package per.ymm.weixiubao.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class Orders {
@@ -26,9 +28,9 @@ public class Orders {
     private Integer payMode;
 
     private String evaluate;
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date startTime;
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date receiveTime;
 
     private Date endTime;

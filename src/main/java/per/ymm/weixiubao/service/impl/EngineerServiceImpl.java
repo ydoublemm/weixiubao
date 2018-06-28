@@ -11,7 +11,7 @@ import per.ymm.weixiubao.pojo.EngineerExample;
 import per.ymm.weixiubao.service.EngineerService;
 import per.ymm.weixiubao.utils.EngineerUtils;
 import per.ymm.weixiubao.utils.PageVoUtils;
-import per.ymm.weixiubao.DTO.PageVo;
+import per.ymm.weixiubao.dto.PageDTO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -82,7 +82,7 @@ public class EngineerServiceImpl implements EngineerService {
     }
 
     @Override
-    public Map<String, Object> getInfoByPage(PageVo page) {
+    public Map<String, Object> getInfoByPage(PageDTO page) {
         //健壮性检查
         PageVoUtils.check(page);
         //pagehelper分页

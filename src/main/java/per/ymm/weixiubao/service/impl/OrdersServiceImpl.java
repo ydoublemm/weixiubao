@@ -4,14 +4,15 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import per.ymm.weixiubao.dao.EngineerMapper;
 import per.ymm.weixiubao.dao.OrdersMapper;
+import per.ymm.weixiubao.dao.UserMapper;
+import per.ymm.weixiubao.dto.OrdersDTO;
 import per.ymm.weixiubao.exception.MessageException;
-import per.ymm.weixiubao.pojo.Orders;
-import per.ymm.weixiubao.pojo.OrdersExample;
+import per.ymm.weixiubao.pojo.*;
 import per.ymm.weixiubao.service.OrdersService;
 import per.ymm.weixiubao.utils.PageVoUtils;
-import per.ymm.weixiubao.DTO.OrdersVo;
-import per.ymm.weixiubao.DTO.PageVo;
+import per.ymm.weixiubao.dto.PageDTO;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +30,12 @@ public class OrdersServiceImpl implements OrdersService {
     @Autowired
     private OrdersMapper ordersMapper;
 
+    @Autowired
+    private EngineerMapper engineerMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
     public String save(final Orders orders) {
         //设置初始化信息
@@ -44,7 +51,7 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
-    public Map receiveOrders(final PageVo page, Integer status) throws MessageException {
+    public Map receiveOrders(final PageDTO page, Integer status) throws MessageException {
         //page健壮性检查
         PageVoUtils.check(page);
         if (status == null || status > 3 || status < 0) {
@@ -76,10 +83,10 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
-    public boolean ordersTaking(OrdersVo ordersVo) {
+    public boolean ordersTaking(OrdersDTO ordersDTO) {
         Orders o = new Orders();
-        o.setId(ordersVo.getOrderId());
-        o.setEngineerId(ordersVo.getEngineerId());
+        o.setId(ordersDTO.getOrderId());
+        o.setEngineerId(ordersDTO.getEngineerId());
         o.setStatus(2);//工程师已受理
         int i = ordersMapper.updateByPrimaryKeySelective(o);
 
@@ -95,29 +102,29 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
-    public List<Orders> getOrdersByStatusForEngineer(OrdersVo ordersVo) throws MessageException {
+    public List<Orders> getOrdersByStatusForEngineer(OrdersDTO ordersDTO) throws MessageException {
         //判断查询的信息是否合法
-        if(ordersVo.getStatus()>3||ordersVo.getStatus()<2){
+        if(ordersDTO.getStatus()>3|| ordersDTO.getStatus()<2){
             throw new MessageException("无法查询该状态的订单！！");
         }
         OrdersExample oe= new OrdersExample();
         //查询工程师自己的 已受理订单 和已结束订单
-        oe.createCriteria().andStatusEqualTo(ordersVo.getStatus())
-                           .andEngineerIdEqualTo(ordersVo.getEngineerId());
+        oe.createCriteria().andStatusEqualTo(ordersDTO.getStatus())
+                           .andEngineerIdEqualTo(ordersDTO.getEngineerId());
         List<Orders> orders = ordersMapper.selectByExample(oe);
         return orders;
     }
 
     @Override
-    public List<Orders> getOrdersByStatusForUser(final OrdersVo ordersVo) throws MessageException {
+    public List<Orders> getOrdersByStatusForUser(final OrdersDTO ordersDTO) throws MessageException {
         //判断查询的信息是否合法
-        if(ordersVo.getStatus()>3||ordersVo.getStatus()<0){
+        if(ordersDTO.getStatus()>3|| ordersDTO.getStatus()<0){
             throw new MessageException("无法查询该状态的订单！！");
         }
         OrdersExample oe= new OrdersExample();
         //查询工程师自己的 已受理订单 和已结束订单
-        oe.createCriteria().andStatusEqualTo(ordersVo.getStatus())
-                .andUserOpenidEqualTo(ordersVo.getOpenId());
+        oe.createCriteria().andStatusEqualTo(ordersDTO.getStatus())
+                .andUserOpenidEqualTo(ordersDTO.getOpenId());
         List<Orders> orders = ordersMapper.selectByExample(oe);
         return orders;
     }
@@ -129,6 +136,40 @@ public class OrdersServiceImpl implements OrdersService {
         o.setStatus(-1);//拒绝接受订单
         int i = ordersMapper.updateByPrimaryKeySelective(o);
         return i >= 1 ? true : false;
+    }
+
+    @Override
+    public Map<String, Object> getBacktOrders(final PageDTO pageDTO) {
+        //pageDTO健壮性检查
+        PageVoUtils.check(pageDTO);
+        //用pagehelper进行分页
+        Page<Object> newPage = PageHelper.startPage(pageDTO.getCurrentPage(), pageDTO.getPageSize());
+        OrdersExample or = new OrdersExample();
+        or.createCriteria().andModeEqualTo(2);
+        List<Orders> orders = ordersMapper.selectByExample(or);
+
+        //装进map
+        Map<String, Object> map = new HashMap<>();
+        pageDTO.setTotalCount((int) newPage.getTotal());
+        pageDTO.setTotalPage(newPage.getPages());
+        map.put("page", pageDTO);
+        map.put("orders", orders);
+
+        return map;
+    }
+
+    @Override
+    public Object getBackPersonInfo(final String backPersonId) {
+        Object BackPersonInfo;
+        if(backPersonId.length()==28) {//openid一般为28个字符
+            UserExample ue = new UserExample();
+            ue.createCriteria().andOpenidEqualTo(backPersonId);
+            BackPersonInfo = userMapper.selectByExample(ue).get(0);
+        }else {
+            BackPersonInfo = engineerMapper.selectByPrimaryKey(Integer.parseInt(backPersonId));
+        }
+        return BackPersonInfo;
+
     }
 
 

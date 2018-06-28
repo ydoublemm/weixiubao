@@ -1,11 +1,11 @@
-package per.ymm.weixiubao.DTO;
+package per.ymm.weixiubao.dto;
 
 /**
  * @Author: ymm
  * @Date: 2018/6/21 13:20
  * @Description:
  */
-public class PageVo {
+public class PageDTO {
     private Integer currentPage;//当前页
     private Integer pageSize;//每页大小
     private Integer totalCount;//总记录数
@@ -47,13 +47,13 @@ public class PageVo {
         this.totalPage = totalPage;
     }
 
-    public PageVo(final Integer currentPage, final Integer pageSize) {
+    public PageDTO(final Integer currentPage, final Integer pageSize) {
 
         this.currentPage = currentPage;
 
         this.pageSize = pageSize;
     }
 
-    public PageVo() {
+    public PageDTO() {
     }
 }

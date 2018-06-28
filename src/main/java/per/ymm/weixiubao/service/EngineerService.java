@@ -2,7 +2,7 @@ package per.ymm.weixiubao.service;
 
 import per.ymm.weixiubao.exception.MessageException;
 import per.ymm.weixiubao.pojo.Engineer;
-import per.ymm.weixiubao.DTO.PageVo;
+import per.ymm.weixiubao.dto.PageDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +23,7 @@ public interface EngineerService {
     Engineer findInfoByPhoneNumber(String phoneNumber) throws MessageException;
 
     //分页查询工程师信息
-    Map getInfoByPage(PageVo page);
+    Map getInfoByPage(PageDTO page);
 
     //通过id修改工程师信息
     boolean updateInfoById(Engineer engineer) throws MessageException;

@@ -12,8 +12,8 @@ import per.ymm.weixiubao.pojo.Orders;
 import per.ymm.weixiubao.service.OrdersService;
 import per.ymm.weixiubao.utils.ReturnMessage;
 import per.ymm.weixiubao.utils.SaveFile;
-import per.ymm.weixiubao.DTO.OrdersVo;
-import per.ymm.weixiubao.DTO.PageVo;
+import per.ymm.weixiubao.dto.OrdersDTO;
+import per.ymm.weixiubao.dto.PageDTO;
 
 import java.io.IOException;
 import java.util.List;
@@ -52,7 +52,7 @@ public class OrdersController {
     //分页查询订单
     @RequestMapping(value = "/receiveOrders.action")
     @ResponseBody
-    public ReturnMessage receiveOrders(PageVo page, Integer status) throws IOException, MessageException {
+    public ReturnMessage receiveOrders(PageDTO page, Integer status) throws IOException, MessageException {
 
         Map map = ordersService.receiveOrders(page, status);
 
@@ -78,7 +78,7 @@ public class OrdersController {
     //工程师抢单
     @RequestMapping(value = "/ordersTaking.action")
     @ResponseBody
-    public ReturnMessage ordersTaking(@RequestBody OrdersVo otv) throws IOException {
+    public ReturnMessage ordersTaking(@RequestBody OrdersDTO otv) throws IOException {
 
         boolean b = ordersService.ordersTaking(otv);
         ReturnMessage message = ReturnMessage.isOk(b);
@@ -102,7 +102,7 @@ public class OrdersController {
     //获取工程师相关的订单信息
     @RequestMapping(value = "/getOrdersByStatusForEngineer.action")
     @ResponseBody
-    public ReturnMessage getOrdersByStatusForEngineer(@RequestBody OrdersVo otv) throws IOException, MessageException {
+    public ReturnMessage getOrdersByStatusForEngineer(@RequestBody OrdersDTO otv) throws IOException, MessageException {
         List<Orders> orders = ordersService.getOrdersByStatusForEngineer(otv);
         ReturnMessage message = ReturnMessage.ok();
         message.setData(orders);
@@ -112,7 +112,7 @@ public class OrdersController {
     //用户查询订单相关信息
     @RequestMapping(value = "/getOrdersByStatusForUser.action")
     @ResponseBody
-    public ReturnMessage getOrdersByStatusForUser(OrdersVo otv) throws IOException, MessageException {
+    public ReturnMessage getOrdersByStatusForUser(OrdersDTO otv) throws IOException, MessageException {
         List<Orders> orders = ordersService.getOrdersByStatusForUser(otv);
         ReturnMessage message = ReturnMessage.ok();
         message.setData(orders);
@@ -129,6 +129,27 @@ public class OrdersController {
         if(b==false){
             message.setMessage("修改失败，可能不存在这个订单！！");
         }
+        return message;
+    }
+
+    //后台查询退单查询
+    @RequestMapping(value = "/getBackOrders.action")
+    @ResponseBody
+    public ReturnMessage getBacktOrders(PageDTO pageDTO) {
+
+        Map backtOrders = ordersService.getBacktOrders(pageDTO);
+        ReturnMessage message = ReturnMessage.ok();
+        message.setData(backtOrders);
+        return message;
+    }
+
+    //查询退单人的信息(可能是工程师或者用户)
+    @RequestMapping(value = "/getBackPersonInfo.action")
+    @ResponseBody
+    public ReturnMessage getBackPersonInfo(String backPersonId) {
+        Object backPersonInfo = ordersService.getBackPersonInfo(backPersonId);
+        ReturnMessage message = ReturnMessage.ok();
+        message.setData(backPersonInfo);
         return message;
     }
 

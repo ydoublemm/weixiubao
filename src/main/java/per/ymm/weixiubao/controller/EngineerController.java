@@ -10,7 +10,7 @@ import per.ymm.weixiubao.exception.MessageException;
 import per.ymm.weixiubao.pojo.Engineer;
 import per.ymm.weixiubao.service.EngineerService;
 import per.ymm.weixiubao.utils.ReturnMessage;
-import per.ymm.weixiubao.DTO.PageVo;
+import per.ymm.weixiubao.dto.PageDTO;
 
 import java.util.Map;
 
@@ -47,7 +47,7 @@ public class EngineerController {
     //分页查询工程师信息
     @RequestMapping(value = "/getInfo.action")
     @ResponseBody
-    public ReturnMessage getInfo(PageVo page){
+    public ReturnMessage getInfo(PageDTO page){
         Map info = engineerService.getInfoByPage(page);
         ReturnMessage ok = ReturnMessage.ok();
         ok.setData(info);

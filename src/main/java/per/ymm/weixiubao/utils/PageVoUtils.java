@@ -1,6 +1,6 @@
 package per.ymm.weixiubao.utils;
 
-import per.ymm.weixiubao.DTO.PageVo;
+import per.ymm.weixiubao.dto.PageDTO;
 
 /**
  * @Author: ymm
@@ -8,7 +8,7 @@ import per.ymm.weixiubao.DTO.PageVo;
  * @Description:
  */
 public class PageVoUtils {
-    public  static void check(PageVo page){
+    public  static void check(PageDTO page){
         Integer currentPage = page.getCurrentPage();
         Integer pageSize = page.getPageSize();
         if(currentPage==null || currentPage<=0){

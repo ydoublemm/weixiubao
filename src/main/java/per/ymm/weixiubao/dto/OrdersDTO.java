@@ -1,11 +1,11 @@
-package per.ymm.weixiubao.DTO;
+package per.ymm.weixiubao.dto;
 
 /**
  * @Author: ymm
  * @Date: 2018/6/26 9:49
  * @Description:
  */
-public class OrdersVo {
+public class OrdersDTO {
     private Integer engineerId;
     private String orderId;
     private Integer status;
@@ -45,7 +45,7 @@ public class OrdersVo {
 
     @Override
     public String toString() {
-        return "OrdersVo{" +
+        return "OrdersDTO{" +
                 "engineerId=" + engineerId +
                 ", orderId='" + orderId + '\'' +
                 ", status=" + status +

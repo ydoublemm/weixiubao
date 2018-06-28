@@ -50,4 +50,10 @@ public interface OrdersService {
 
      //退单与对单原因
     boolean backOrder(OrdersDTO ordersDTO) throws MessageException;
+
+    //工程师设置订单金额
+    boolean setOrderPrice(OrdersDTO ordersDTO) throws MessageException;
+
+    //工程师结束订单
+    boolean endingOrder(String OrderId) throws MessageException;
 }

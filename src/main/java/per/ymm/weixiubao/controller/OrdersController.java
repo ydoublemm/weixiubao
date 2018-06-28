@@ -165,4 +165,41 @@ public class OrdersController {
         return message;
     }
 
+    //工程师退单
+    @RequestMapping(value = "/backOrderForEngineer.action")
+    @ResponseBody
+    public ReturnMessage backOrderForEngineer(@RequestBody OrdersDTO ordersDTO) throws MessageException {
+        boolean b = ordersService.backOrder(ordersDTO);
+        ReturnMessage message = ReturnMessage.isOk(b);
+        if (b==false){
+            message.setMessage("操作失败！！");
+        }
+        return message;
+    }
+
+    //工程师设置订单的金额和支付方式
+    @RequestMapping(value = "/setOrderPrice.action")
+    @ResponseBody
+    public ReturnMessage setOrderPrice(@RequestBody OrdersDTO ordersDTO) throws MessageException {
+        boolean b = ordersService.setOrderPrice(ordersDTO);
+        ReturnMessage message = ReturnMessage.isOk(b);
+        if (b==false){
+            message.setMessage("操作失败！！");
+        }
+        return message;
+    }
+
+
+    //工程师结束订单
+    @RequestMapping(value = "/endingOrder.action")
+    @ResponseBody
+    public ReturnMessage endingOrder(@RequestBody OrdersDTO ordersDTO) throws MessageException {
+        boolean b = ordersService.endingOrder(ordersDTO.getOrderId());
+        ReturnMessage message = ReturnMessage.isOk(b);
+        if (b==false){
+            message.setMessage("操作失败！！");
+        }
+        return message;
+    }
+
 }

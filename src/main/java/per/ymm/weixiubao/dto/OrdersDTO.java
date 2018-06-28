@@ -11,6 +11,24 @@ public class OrdersDTO {
     private Integer status;
     private String openId;
     private String reason;
+    private  Double price;
+    private Integer payMode;
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(final Double price) {
+        this.price = price;
+    }
+
+    public Integer getPayMode() {
+        return payMode;
+    }
+
+    public void setPayMode(final Integer payMode) {
+        this.payMode = payMode;
+    }
 
     public String getReason() {
         return reason;
@@ -60,6 +78,8 @@ public class OrdersDTO {
                 ", status=" + status +
                 ", openId='" + openId + '\'' +
                 ", reason='" + reason + '\'' +
+                ", price=" + price +
+                ", payMode=" + payMode +
                 '}';
     }
 }

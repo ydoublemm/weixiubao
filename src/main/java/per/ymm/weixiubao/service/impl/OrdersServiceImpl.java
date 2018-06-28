@@ -199,5 +199,37 @@ public class OrdersServiceImpl implements OrdersService {
         return i==1?true:false;
     }
 
+    @Override
+    public boolean setOrderPrice(final OrdersDTO ordersDTO) throws MessageException {
+        //先查出来看订单的状态
+        Orders existOrder = ordersMapper.selectByPrimaryKey(ordersDTO.getOrderId());
+        //不是2 不能设置金额
+        if ((!existOrder.getStatus().equals(2))) {
+            throw new MessageException("不能进行这个操作！！");
+        }
+        Orders order = new Orders();
+        order.setId(ordersDTO.getOrderId());
+        //order.setPayMode(ordersDTO.getPayMode());
+        order.setPrice(ordersDTO.getPrice());
+        int i = ordersMapper.updateByPrimaryKeySelective(order);
+        return i==1?true:false;
+    }
+
+    @Override
+    public boolean endingOrder(final String OrderId) throws MessageException {
+        //先查出来看订单的状态
+        Orders existOrder = ordersMapper.selectByPrimaryKey(OrderId);
+        //不是2 不能结束
+        if (!existOrder.getStatus().equals(2)) {
+            throw new MessageException("不能进行这个操作！！");
+        }
+        Orders order = new Orders();
+        order.setId(OrderId);
+        //把订单状态设置为3，结束
+        order.setStatus(3);
+        int i = ordersMapper.updateByPrimaryKeySelective(order);
+        return i==1?true:false;
+    }
+
 
 }

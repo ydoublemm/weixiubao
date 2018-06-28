@@ -1,6 +1,6 @@
 package per.ymm.weixiubao.utils;
 
-import per.ymm.weixiubao.vo.PageVo;
+import per.ymm.weixiubao.DTO.PageVo;
 
 /**
  * @Author: ymm

@@ -1,6 +1,5 @@
 package per.ymm.weixiubao.controller;
 
-import org.aspectj.apache.bcel.generic.RET;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,8 +12,8 @@ import per.ymm.weixiubao.pojo.Orders;
 import per.ymm.weixiubao.service.OrdersService;
 import per.ymm.weixiubao.utils.ReturnMessage;
 import per.ymm.weixiubao.utils.SaveFile;
-import per.ymm.weixiubao.vo.OrdersVo;
-import per.ymm.weixiubao.vo.PageVo;
+import per.ymm.weixiubao.DTO.OrdersVo;
+import per.ymm.weixiubao.DTO.PageVo;
 
 import java.io.IOException;
 import java.util.List;
@@ -117,6 +116,19 @@ public class OrdersController {
         List<Orders> orders = ordersService.getOrdersByStatusForUser(otv);
         ReturnMessage message = ReturnMessage.ok();
         message.setData(orders);
+        return message;
+    }
+
+    //后台拒收订单
+    @RequestMapping(value = "/rejectOrder.action")
+    @ResponseBody
+    public ReturnMessage rejectOrder(String orderId) throws IOException, MessageException {
+
+        boolean b = ordersService.rejectOrder(orderId);
+        ReturnMessage message = ReturnMessage.isOk(b);
+        if(b==false){
+            message.setMessage("修改失败，可能不存在这个订单！！");
+        }
         return message;
     }
 

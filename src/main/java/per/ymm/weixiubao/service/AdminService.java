@@ -13,5 +13,5 @@ public interface AdminService {
     //管理员登陆
     boolean login(Admin admin) throws MessageException;
     //获取管理管信息
-    Admin getgetAdminInfoByUser(String adminName) throws Exception;
+    Admin getAdminInfoByUser(String adminName) throws Exception;
 }

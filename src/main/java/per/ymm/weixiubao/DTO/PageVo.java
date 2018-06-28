@@ -1,4 +1,4 @@
-package per.ymm.weixiubao.vo;
+package per.ymm.weixiubao.DTO;
 
 /**
  * @Author: ymm

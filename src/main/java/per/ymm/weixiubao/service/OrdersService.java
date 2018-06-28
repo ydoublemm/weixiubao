@@ -3,8 +3,8 @@ package per.ymm.weixiubao.service;
 import org.springframework.stereotype.Service;
 import per.ymm.weixiubao.exception.MessageException;
 import per.ymm.weixiubao.pojo.Orders;
-import per.ymm.weixiubao.vo.OrdersVo;
-import per.ymm.weixiubao.vo.PageVo;
+import per.ymm.weixiubao.DTO.OrdersVo;
+import per.ymm.weixiubao.DTO.PageVo;
 
 import java.util.List;
 import java.util.Map;
@@ -38,4 +38,7 @@ public interface OrdersService {
 
     //用户根据订单状态查询订单信息
      List<Orders> getOrdersByStatusForUser(OrdersVo ordersVo) throws MessageException;
+
+     //后台拒绝接受订单
+     boolean rejectOrder(String orderId);
 }

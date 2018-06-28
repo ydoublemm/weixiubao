@@ -41,11 +41,13 @@ public class AdminController {
        //从session拿到用户名
         String adminName = (String)request.getSession().getAttribute("admin");
 
-        Admin admin = adminService.getgetAdminInfoByUser(adminName);
+        Admin admin = adminService.getAdminInfoByUser(adminName);
         //密码不能传哦
         admin.setPassword("");
         ReturnMessage rm = new ReturnMessage(true,null,admin);
 
         return rm;
     }
+
+
 }

@@ -6,13 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import per.ymm.weixiubao.dao.OrdersMapper;
 import per.ymm.weixiubao.exception.MessageException;
-import per.ymm.weixiubao.pojo.Engineer;
 import per.ymm.weixiubao.pojo.Orders;
 import per.ymm.weixiubao.pojo.OrdersExample;
 import per.ymm.weixiubao.service.OrdersService;
 import per.ymm.weixiubao.utils.PageVoUtils;
-import per.ymm.weixiubao.vo.OrdersVo;
-import per.ymm.weixiubao.vo.PageVo;
+import per.ymm.weixiubao.DTO.OrdersVo;
+import per.ymm.weixiubao.DTO.PageVo;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -121,6 +120,15 @@ public class OrdersServiceImpl implements OrdersService {
                 .andUserOpenidEqualTo(ordersVo.getOpenId());
         List<Orders> orders = ordersMapper.selectByExample(oe);
         return orders;
+    }
+
+    @Override
+    public boolean rejectOrder(final String orderId) {
+        Orders o = new Orders();
+        o.setId(orderId);
+        o.setStatus(-1);//拒绝接受订单
+        int i = ordersMapper.updateByPrimaryKeySelective(o);
+        return i >= 1 ? true : false;
     }
 
 

@@ -40,11 +40,14 @@ public interface OrdersService {
      List<Orders> getOrdersByStatusForUser(OrdersDTO ordersDTO) throws MessageException;
 
      //后台拒绝接受订单
-     boolean rejectOrder(String orderId);
+     boolean rejectOrder(String orderId) throws MessageException;
 
      //后台订单查询
     Map getBacktOrders(PageDTO pageDTO);
 
     //查询退单人的信息
      Object getBackPersonInfo(String backPersonId);
+
+     //退单与对单原因
+    boolean backOrder(OrdersDTO ordersDTO) throws MessageException;
 }

@@ -10,6 +10,15 @@ public class OrdersDTO {
     private String orderId;
     private Integer status;
     private String openId;
+    private String reason;
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(final String reason) {
+        this.reason = reason;
+    }
 
     public String getOpenId() {
         return openId;
@@ -50,6 +59,7 @@ public class OrdersDTO {
                 ", orderId='" + orderId + '\'' +
                 ", status=" + status +
                 ", openId='" + openId + '\'' +
+                ", reason='" + reason + '\'' +
                 '}';
     }
 }

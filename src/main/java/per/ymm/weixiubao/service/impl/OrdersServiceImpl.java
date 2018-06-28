@@ -8,12 +8,15 @@ import per.ymm.weixiubao.dao.EngineerMapper;
 import per.ymm.weixiubao.dao.OrdersMapper;
 import per.ymm.weixiubao.dao.UserMapper;
 import per.ymm.weixiubao.dto.OrdersDTO;
+import per.ymm.weixiubao.dto.PageDTO;
 import per.ymm.weixiubao.exception.MessageException;
-import per.ymm.weixiubao.pojo.*;
+import per.ymm.weixiubao.pojo.Orders;
+import per.ymm.weixiubao.pojo.OrdersExample;
+import per.ymm.weixiubao.pojo.UserExample;
 import per.ymm.weixiubao.service.OrdersService;
 import per.ymm.weixiubao.utils.PageVoUtils;
-import per.ymm.weixiubao.dto.PageDTO;
 
+import javax.sound.midi.Soundbank;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -95,7 +98,7 @@ public class OrdersServiceImpl implements OrdersService {
 
     @Override
     public List<Orders> getOrdersForEngineer() {
-        OrdersExample oe= new OrdersExample();
+        OrdersExample oe = new OrdersExample();
         oe.createCriteria().andStatusEqualTo(1);
         List<Orders> orders = ordersMapper.selectByExample(oe);
         return orders;
@@ -104,13 +107,13 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public List<Orders> getOrdersByStatusForEngineer(OrdersDTO ordersDTO) throws MessageException {
         //判断查询的信息是否合法
-        if(ordersDTO.getStatus()>3|| ordersDTO.getStatus()<2){
+        if (ordersDTO.getStatus() > 3 || ordersDTO.getStatus() < 2) {
             throw new MessageException("无法查询该状态的订单！！");
         }
-        OrdersExample oe= new OrdersExample();
+        OrdersExample oe = new OrdersExample();
         //查询工程师自己的 已受理订单 和已结束订单
         oe.createCriteria().andStatusEqualTo(ordersDTO.getStatus())
-                           .andEngineerIdEqualTo(ordersDTO.getEngineerId());
+                .andEngineerIdEqualTo(ordersDTO.getEngineerId());
         List<Orders> orders = ordersMapper.selectByExample(oe);
         return orders;
     }
@@ -118,10 +121,10 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public List<Orders> getOrdersByStatusForUser(final OrdersDTO ordersDTO) throws MessageException {
         //判断查询的信息是否合法
-        if(ordersDTO.getStatus()>3|| ordersDTO.getStatus()<0){
+        if (ordersDTO.getStatus() > 3 || ordersDTO.getStatus() < 0) {
             throw new MessageException("无法查询该状态的订单！！");
         }
-        OrdersExample oe= new OrdersExample();
+        OrdersExample oe = new OrdersExample();
         //查询工程师自己的 已受理订单 和已结束订单
         oe.createCriteria().andStatusEqualTo(ordersDTO.getStatus())
                 .andUserOpenidEqualTo(ordersDTO.getOpenId());
@@ -130,7 +133,12 @@ public class OrdersServiceImpl implements OrdersService {
     }
 
     @Override
-    public boolean rejectOrder(final String orderId) {
+    public boolean rejectOrder(final String orderId) throws MessageException {
+        //先查出来看订单的状态
+        Orders existOrder = ordersMapper.selectByPrimaryKey(orderId);
+        if (existOrder.getStatus() != 0) {
+            throw new MessageException("不能进行这个操作！！");
+        }
         Orders o = new Orders();
         o.setId(orderId);
         o.setStatus(-1);//拒绝接受订单
@@ -161,15 +169,34 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public Object getBackPersonInfo(final String backPersonId) {
         Object BackPersonInfo;
-        if(backPersonId.length()==28) {//openid一般为28个字符
+        if (backPersonId.length() == 28 && (!"0".equals(backPersonId))) {//openid一般为28个字符
             UserExample ue = new UserExample();
             ue.createCriteria().andOpenidEqualTo(backPersonId);
             BackPersonInfo = userMapper.selectByExample(ue).get(0);
-        }else {
+        } else {
             BackPersonInfo = engineerMapper.selectByPrimaryKey(Integer.parseInt(backPersonId));
         }
         return BackPersonInfo;
 
+    }
+
+    @Override
+    public boolean backOrder(final OrdersDTO ordersDTO) throws MessageException {//这个方法应该加锁
+        //先查出来看订单的状态
+        Orders existOrder = ordersMapper.selectByPrimaryKey(ordersDTO.getOrderId());
+        if (!existOrder.getMode().equals(1)) {//不是1 说明已经推过单了
+            throw new MessageException("不能进行这个操作！！");
+        }
+        Orders order = new Orders();
+        order.setId(ordersDTO.getOrderId());
+        order.setMode(2);
+        //取两者中有值得一方
+        order.setBackPerson(ordersDTO.getOpenId()!=null?
+                                ordersDTO.getOpenId():
+                                ordersDTO.getEngineerId()+"");
+        order.setReason(ordersDTO.getReason());
+        int i = ordersMapper.updateByPrimaryKeySelective(order);
+        return i==1?true:false;
     }
 
 

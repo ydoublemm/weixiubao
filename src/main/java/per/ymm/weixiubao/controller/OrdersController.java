@@ -153,4 +153,16 @@ public class OrdersController {
         return message;
     }
 
+    //用户退单
+    @RequestMapping(value = "/backOrderForUser.action")
+    @ResponseBody
+    public ReturnMessage backOrderForUser(OrdersDTO ordersDTO) throws MessageException {
+        boolean b = ordersService.backOrder(ordersDTO);
+        ReturnMessage message = ReturnMessage.isOk(b);
+        if (b==false){
+            message.setMessage("操作失败！！");
+        }
+        return message;
+    }
+
 }

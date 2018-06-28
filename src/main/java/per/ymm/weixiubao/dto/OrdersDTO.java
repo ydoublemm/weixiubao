@@ -13,6 +13,15 @@ public class OrdersDTO {
     private String reason;
     private  Double price;
     private Integer payMode;
+    private String evaluate;
+
+    public String getEvaluate() {
+        return evaluate;
+    }
+
+    public void setEvaluate(final String evaluate) {
+        this.evaluate = evaluate;
+    }
 
     public Double getPrice() {
         return price;

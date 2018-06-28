@@ -63,7 +63,8 @@ public class OrdersServiceImpl implements OrdersService {
         //用pagehelper进行分页
         Page<Object> newPage = PageHelper.startPage(page.getCurrentPage(), page.getPageSize());
         OrdersExample or = new OrdersExample();
-        or.createCriteria().andStatusEqualTo(status);
+        or.createCriteria().andStatusEqualTo(status)
+                .andModeEqualTo(1);
         List<Orders> orders = ordersMapper.selectByExample(or);
 
         //装进map
@@ -99,7 +100,7 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public List<Orders> getOrdersForEngineer() {
         OrdersExample oe = new OrdersExample();
-        oe.createCriteria().andStatusEqualTo(1);
+        oe.createCriteria().andStatusEqualTo(1).andModeEqualTo(1);
         List<Orders> orders = ordersMapper.selectByExample(oe);
         return orders;
     }
@@ -113,7 +114,8 @@ public class OrdersServiceImpl implements OrdersService {
         OrdersExample oe = new OrdersExample();
         //查询工程师自己的 已受理订单 和已结束订单
         oe.createCriteria().andStatusEqualTo(ordersDTO.getStatus())
-                .andEngineerIdEqualTo(ordersDTO.getEngineerId());
+                .andEngineerIdEqualTo(ordersDTO.getEngineerId())
+                .andModeEqualTo(1);
         List<Orders> orders = ordersMapper.selectByExample(oe);
         return orders;
     }
@@ -127,7 +129,8 @@ public class OrdersServiceImpl implements OrdersService {
         OrdersExample oe = new OrdersExample();
         //查询工程师自己的 已受理订单 和已结束订单
         oe.createCriteria().andStatusEqualTo(ordersDTO.getStatus())
-                .andUserOpenidEqualTo(ordersDTO.getOpenId());
+                .andUserOpenidEqualTo(ordersDTO.getOpenId())
+                .andModeEqualTo(1);
         List<Orders> orders = ordersMapper.selectByExample(oe);
         return orders;
     }
@@ -153,7 +156,8 @@ public class OrdersServiceImpl implements OrdersService {
         //用pagehelper进行分页
         Page<Object> newPage = PageHelper.startPage(pageDTO.getCurrentPage(), pageDTO.getPageSize());
         OrdersExample or = new OrdersExample();
-        or.createCriteria().andModeEqualTo(2);
+        or.createCriteria().andModeEqualTo(2)
+                .andModeEqualTo(1);
         List<Orders> orders = ordersMapper.selectByExample(or);
 
         //装进map
@@ -227,6 +231,27 @@ public class OrdersServiceImpl implements OrdersService {
         order.setId(OrderId);
         //把订单状态设置为3，结束
         order.setStatus(3);
+        //设置结束时间
+        order.setEndTime(new Date());
+        int i = ordersMapper.updateByPrimaryKeySelective(order);
+        return i==1?true:false;
+    }
+
+    @Override
+    public boolean evaluateOrder(final OrdersDTO ordersDTO) throws MessageException {
+        //先查出来看订单的状态
+        Orders existOrder = ordersMapper.selectByPrimaryKey(ordersDTO.getOrderId());
+        //不是3 不能评价
+        if (!existOrder.getStatus().equals(3)) {
+            throw new MessageException("不能进行这个操作！！");
+        }
+
+        if(ordersDTO.getEvaluate().length()>=255){
+            throw new MessageException("评价太长啦！！");
+        }
+        Orders order = new Orders();
+        order.setId(ordersDTO.getOrderId());
+        order.setEvaluate(ordersDTO.getEvaluate());
         int i = ordersMapper.updateByPrimaryKeySelective(order);
         return i==1?true:false;
     }

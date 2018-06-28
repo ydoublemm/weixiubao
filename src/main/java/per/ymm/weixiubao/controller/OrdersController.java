@@ -202,4 +202,16 @@ public class OrdersController {
         return message;
     }
 
+    //用户评价订单
+    @RequestMapping(value = "/evaluateOrder.action")
+    @ResponseBody
+    public ReturnMessage evaluateOrder(OrdersDTO ordersDTO) throws MessageException {
+        boolean b = ordersService.evaluateOrder(ordersDTO);
+        ReturnMessage message = ReturnMessage.isOk(b);
+        if (b==false){
+            message.setMessage("操作失败！！");
+        }
+        return message;
+    }
+
 }

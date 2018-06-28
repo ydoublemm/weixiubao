@@ -33,7 +33,7 @@ public interface OrdersService {
     //工程师获取订单信息（等待工程师接收的订单）
     List<Orders> getOrdersForEngineer();
 
-    //工程师更具订单状态获取订单信息
+    //工程师根据订单状态获取订单信息
     List<Orders> getOrdersByStatusForEngineer(OrdersDTO ordersVo) throws MessageException;
 
     //用户根据订单状态查询订单信息
@@ -48,7 +48,7 @@ public interface OrdersService {
     //查询退单人的信息
      Object getBackPersonInfo(String backPersonId);
 
-     //退单与对单原因
+     //退单与退单原因
     boolean backOrder(OrdersDTO ordersDTO) throws MessageException;
 
     //工程师设置订单金额
@@ -56,4 +56,7 @@ public interface OrdersService {
 
     //工程师结束订单
     boolean endingOrder(String OrderId) throws MessageException;
+
+    //用户评价订单
+    boolean evaluateOrder(OrdersDTO ordersDTO) throws MessageException;
 }

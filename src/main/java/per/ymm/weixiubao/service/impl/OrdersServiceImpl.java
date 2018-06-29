@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import per.ymm.weixiubao.constant.OrderConstant;
 import per.ymm.weixiubao.dao.EngineerMapper;
 import per.ymm.weixiubao.dao.OrdersMapper;
 import per.ymm.weixiubao.dao.UserMapper;
@@ -16,7 +17,6 @@ import per.ymm.weixiubao.pojo.UserExample;
 import per.ymm.weixiubao.service.OrdersService;
 import per.ymm.weixiubao.utils.PageVoUtils;
 
-import javax.sound.midi.Soundbank;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,12 +42,12 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public String save(final Orders orders) {
         //设置初始化信息
-        orders.setStatus(0);//订单状态 需要前端确认
-        orders.setMode(1);//是否要服务：1是，2退单
-        orders.setCurrentOrder(1);//是否是当前订单 1是，2不是
+        orders.setStatus(OrderConstant.STATUS_ORDER_RECEIVED);//订单状态 需要前端确认
+        orders.setMode(OrderConstant.MODE_ONGOING);//是否要服务：1是，2退单
+        orders.setCurrentOrder(OrderConstant.CURRENT_ORDER_YES);//是否是当前订单 1是，2不是
         orders.setReceiveTime(new Date());
         orders.setBackPerson("0");
-        orders.setPayMode(0);
+        orders.setPayMode(OrderConstant.PAYMODE_UNKNOW);
         //插入到数据库
         ordersMapper.insertSelective(orders);
         return orders.getId();
@@ -57,14 +57,16 @@ public class OrdersServiceImpl implements OrdersService {
     public Map receiveOrders(final PageDTO page, Integer status) throws MessageException {
         //page健壮性检查
         PageVoUtils.check(page);
-        if (status == null || status > 3 || status < 0) {
+        if (status == null
+                || status > OrderConstant.STATUS_ORDER_END
+                || status < OrderConstant.STATUS_ORDER_RECEIVED) {
             throw new MessageException("订单状态不符合！！");
         }
         //用pagehelper进行分页
         Page<Object> newPage = PageHelper.startPage(page.getCurrentPage(), page.getPageSize());
         OrdersExample or = new OrdersExample();
         or.createCriteria().andStatusEqualTo(status)
-                .andModeEqualTo(1);
+                .andModeEqualTo(OrderConstant.MODE_ONGOING);
         List<Orders> orders = ordersMapper.selectByExample(or);
 
         //装进map
@@ -81,7 +83,7 @@ public class OrdersServiceImpl implements OrdersService {
     public boolean confirmOrder(final String orderId) {
         Orders o = new Orders();
         o.setId(orderId);
-        o.setStatus(1);//等待工程师受理
+        o.setStatus(OrderConstant.STATUS_ORDER_WAITENGINEER);//等待工程师受理
         int i = ordersMapper.updateByPrimaryKeySelective(o);
         return i >= 1 ? true : false;
     }
@@ -91,7 +93,7 @@ public class OrdersServiceImpl implements OrdersService {
         Orders o = new Orders();
         o.setId(ordersDTO.getOrderId());
         o.setEngineerId(ordersDTO.getEngineerId());
-        o.setStatus(2);//工程师已受理
+        o.setStatus(OrderConstant.STATUS_ORDER_ACCEPT);//工程师已受理
         int i = ordersMapper.updateByPrimaryKeySelective(o);
 
         return i >= 1 ? true : false;
@@ -100,7 +102,8 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public List<Orders> getOrdersForEngineer() {
         OrdersExample oe = new OrdersExample();
-        oe.createCriteria().andStatusEqualTo(1).andModeEqualTo(1);
+        oe.createCriteria().andStatusEqualTo(OrderConstant.STATUS_ORDER_ACCEPT)
+                           .andModeEqualTo(OrderConstant.MODE_ONGOING);
         List<Orders> orders = ordersMapper.selectByExample(oe);
         return orders;
     }
@@ -108,14 +111,15 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public List<Orders> getOrdersByStatusForEngineer(OrdersDTO ordersDTO) throws MessageException {
         //判断查询的信息是否合法
-        if (ordersDTO.getStatus() > 3 || ordersDTO.getStatus() < 2) {
+        if (ordersDTO.getStatus() > OrderConstant.STATUS_ORDER_END
+                || ordersDTO.getStatus() < OrderConstant.CURRENT_ORDER_NO) {
             throw new MessageException("无法查询该状态的订单！！");
         }
         OrdersExample oe = new OrdersExample();
         //查询工程师自己的 已受理订单 和已结束订单
         oe.createCriteria().andStatusEqualTo(ordersDTO.getStatus())
                 .andEngineerIdEqualTo(ordersDTO.getEngineerId())
-                .andModeEqualTo(1);
+                .andModeEqualTo(OrderConstant.MODE_ONGOING);
         List<Orders> orders = ordersMapper.selectByExample(oe);
         return orders;
     }
@@ -123,14 +127,15 @@ public class OrdersServiceImpl implements OrdersService {
     @Override
     public List<Orders> getOrdersByStatusForUser(final OrdersDTO ordersDTO) throws MessageException {
         //判断查询的信息是否合法
-        if (ordersDTO.getStatus() > 3 || ordersDTO.getStatus() < 0) {
+        if (ordersDTO.getStatus() > OrderConstant.STATUS_ORDER_END
+                || ordersDTO.getStatus() < OrderConstant.CURRENT_ORDER_NO) {
             throw new MessageException("无法查询该状态的订单！！");
         }
         OrdersExample oe = new OrdersExample();
         //查询工程师自己的 已受理订单 和已结束订单
         oe.createCriteria().andStatusEqualTo(ordersDTO.getStatus())
                 .andUserOpenidEqualTo(ordersDTO.getOpenId())
-                .andModeEqualTo(1);
+                .andModeEqualTo(OrderConstant.MODE_ONGOING);
         List<Orders> orders = ordersMapper.selectByExample(oe);
         return orders;
     }
@@ -139,7 +144,7 @@ public class OrdersServiceImpl implements OrdersService {
     public boolean rejectOrder(final String orderId) throws MessageException {
         //先查出来看订单的状态
         Orders existOrder = ordersMapper.selectByPrimaryKey(orderId);
-        if (existOrder.getStatus() != 0) {
+        if (existOrder.getStatus() != OrderConstant.STATUS_ORDER_RECEIVED) {
             throw new MessageException("不能进行这个操作！！");
         }
         Orders o = new Orders();
@@ -156,8 +161,8 @@ public class OrdersServiceImpl implements OrdersService {
         //用pagehelper进行分页
         Page<Object> newPage = PageHelper.startPage(pageDTO.getCurrentPage(), pageDTO.getPageSize());
         OrdersExample or = new OrdersExample();
-        or.createCriteria().andModeEqualTo(2)
-                .andModeEqualTo(1);
+        or.createCriteria().andModeEqualTo(OrderConstant.MODE_BACK);
+                //.andModeEqualTo(1);
         List<Orders> orders = ordersMapper.selectByExample(or);
 
         //装进map
@@ -193,7 +198,7 @@ public class OrdersServiceImpl implements OrdersService {
         }
         Orders order = new Orders();
         order.setId(ordersDTO.getOrderId());
-        order.setMode(2);
+        order.setMode(OrderConstant.MODE_BACK);
         //取两者中有值得一方
         order.setBackPerson(ordersDTO.getOpenId()!=null?
                                 ordersDTO.getOpenId():
@@ -208,7 +213,7 @@ public class OrdersServiceImpl implements OrdersService {
         //先查出来看订单的状态
         Orders existOrder = ordersMapper.selectByPrimaryKey(ordersDTO.getOrderId());
         //不是2 不能设置金额
-        if ((!existOrder.getStatus().equals(2))) {
+        if ((!existOrder.getStatus().equals(OrderConstant.STATUS_ORDER_ACCEPT))) {
             throw new MessageException("不能进行这个操作！！");
         }
         Orders order = new Orders();
@@ -224,13 +229,13 @@ public class OrdersServiceImpl implements OrdersService {
         //先查出来看订单的状态
         Orders existOrder = ordersMapper.selectByPrimaryKey(OrderId);
         //不是2 不能结束
-        if (!existOrder.getStatus().equals(2)) {
+        if (!existOrder.getStatus().equals(OrderConstant.STATUS_ORDER_ACCEPT)) {
             throw new MessageException("不能进行这个操作！！");
         }
         Orders order = new Orders();
         order.setId(OrderId);
         //把订单状态设置为3，结束
-        order.setStatus(3);
+        order.setStatus(OrderConstant.STATUS_ORDER_END);
         //设置结束时间
         order.setEndTime(new Date());
         int i = ordersMapper.updateByPrimaryKeySelective(order);
@@ -242,7 +247,7 @@ public class OrdersServiceImpl implements OrdersService {
         //先查出来看订单的状态
         Orders existOrder = ordersMapper.selectByPrimaryKey(ordersDTO.getOrderId());
         //不是3 不能评价
-        if (!existOrder.getStatus().equals(3)) {
+        if (!existOrder.getStatus().equals(OrderConstant.STATUS_ORDER_END)) {
             throw new MessageException("不能进行这个操作！！");
         }
 
